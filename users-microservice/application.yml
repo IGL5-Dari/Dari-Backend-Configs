@@ -1,0 +1,78 @@
+spring:
+    application:
+        name: users-microservice
+    datasource:
+        url: jdbc:mysql://localhost:3306/ecommerce-user-microservice?createDatabaseIfNotExist=true
+        username: root
+        password: toor
+        driver-class-name: com.mysql.cj.jdbc.Driver
+    jpa:
+        hibernate:
+            ddl-auto: update
+        show-sql: true
+        database-platform: org.hibernate.dialect.MySQLDialect
+    cloud:
+        loadbalancer:
+            retry:
+                enabled: true
+
+axon:
+    eventhandling:
+        processors:
+            default:
+                mode: tracking
+                source: eventStore
+                initial-segment-count: 1
+
+server:
+    port: 8082
+
+eureka:
+    client:
+        service-url:
+            defaultZone: http://localhost:8761/eureka/
+        register-with-eureka: true
+        fetch-registry: true
+
+logging:
+    level:
+        root: INFO
+        org.springframework.web: DEBUG
+
+management:
+    endpoints:
+        web:
+            exposure:
+                include: "*"
+
+    endpoint:
+        health:
+            show-details: always
+
+    prometheus:
+        metrics:
+            export:
+                enabled: true # Redundant, as the default value is already true
+
+resilience4j:
+    retry:
+        instances:
+            myRetry:
+                max-attempts: 3
+                waitDuration: 500ms
+    ratelimiter:
+        instances:
+            myRateLimiter:
+                limit-for-period: 5
+                limit-refresh-period: 1s
+                timeout-duration: 500ms
+    circuitbreaker:
+        instances:
+            productService:
+                registerHealthIndicator: true
+                slidingWindowSize: 100
+                permittedNumberOfCallsInHalfOpenState: 10
+                minimumNumberOfCalls: 10
+                waitDurationInOpenState: 10000
+                failureRateThreshold: 50
+                eventConsumerBufferSize: 10
