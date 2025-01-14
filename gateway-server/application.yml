@@ -9,6 +9,7 @@ spring:
                     uri: lb://users-microservice
                     predicates:
                         - Path=/users/**
+                        - Path=/auth/**
 
 eureka:
     client:
