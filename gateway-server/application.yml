@@ -13,6 +13,18 @@ spring:
                     predicates:
                         - Path=/users/**
                         - Path=/auth/**
+                -   id: simulation-microservice
+                    uri: lb://simulation
+                    predicates:
+                        - Path=/query/banks/**
+                        - Path=/command/banks/**
+                        - Path=/query/credits/**
+                        - Path=/command/credits/**
+                -   id: Rendez-Vous-microservice
+                    uri: lb://Rendez-Vous
+                    predicates:
+                        - Path=/api/command/rendezvous/**
+                        - Path=/api/query/rendezvous/**
 
 eureka:
     client:
